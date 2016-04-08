@@ -20,4 +20,4 @@ A classic RPG dungeon crawler designed for the Casio fx-G9750II.
  I encourage anyone who wants to learn Casio BASIC (for whatever strange reason), to look through my code and the data files to try and 
  make sense of some of the functions as it might be a good place to start.
  
-<p align="center"> ### Casio BASIC is possibly the worst programming language I have ever had the pleasure of learning. I don't regret any of it though as it teaches a lot of the fundamental programming concepts such as optimisation and efficiency very thouroughly. </p>
+### <p align="center"> Casio BASIC is possibly the worst programming language I have ever had the pleasure of learning. I don't regret any of it though as it teaches a lot of the fundamental programming concepts such as optimisation and efficiency very thouroughly. </p>
