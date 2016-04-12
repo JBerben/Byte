@@ -4,7 +4,7 @@
 / The "arrow" key that is used to assign values to variables will be labeled
 / as "->". Any function such as "ClrText" or statements such as "if", "then",
 / "while" etc will all be in capital letters for ease of recognition.
-/*
+*/
 
 1 -> I
 CLRTEXT
