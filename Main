@@ -4,6 +4,10 @@
 / The "arrow" key that is used to assign values to variables will be labeled
 / as "->". Any function such as "ClrText" or statements such as "if", "then",
 / "while" etc will all be in capital letters for ease of recognition.
+/
+/ Blocks of text that look like "#E691" are symbols on the calculator
+/ that aren't included in the UTF-8 or ASCII character set.
+/ Look in the tilesets folder to reference what these ID's correspond to.
 */
 
 1 -> I
@@ -30,27 +34,647 @@ TEXT 41,3,"allocate a max of 14 AP."
 TEXT 49,3,"Choose wisely as all stats are"
 TEXT 57,3,"calculated off these points!"
 
-'Wait for shift
-WHILE GETKEY != 78
-WHILEEND
+Filename:BYTE 2.0
+1->I
+ClrText
+ClrGraph
+'INTRO TEXT
+'PICMEM19
+RclPict 19
+'WAIT FOR INPUT
+While Getkey!=78
+WhileEnd
 
-'Character Creation
-'uses List 20
-'1-6 is stats
-'7 is cursor height
-'C is count no.
-CLRGRAPH
+'CHARACTER CREATION
+'TUTORIAL
+ClrGraph
+Text 1,3,"Ability points are the base"
+Text 9,3,"stats you give your character."
+Text 17,3,"Remember, a good spread is"
+Text 25,3,"important. Use + & - to add"
+Text 33,3,"or remove points. You can"
+Text 41,3,"allocate a max of 14 AP."
+Text 49,3,"Choose wisely as all stats are"
+Text 57,3,"calculated off these points·!·"
+'WAIT FOR SHIFT
+While Getkey!=78
+WhileEnd
 
-WHILE I < 7
-0 -> List20[I]
-ISZ I
-WHILEEND
+'CHARACTER CREATION
+'USES LIST 20
+'1-6 IS STATS
+'7 IS CURSOR HEIGHT
+'C IS COUNT NO.
+ClrGraph
+While I<7
+0->List 20[I]
+Isz I
+WhileEnd
+18->List 20[7]
+1->I
+Text 1,20,"< Character Creation >"
+Text 8,3,"Stats"
+Text 18,1,">"
+Text 18,8,"Hitpoints:"
+Text 26,8,"Attack:"
+Text 34,8,"Defence:"
+Text 42,8,"Intellect:"
+Text 50,8,"Dexterity:"
+Text 58,8,"Speed:"
+Text 8,50,"Natural ability"
+Text 18,59,"Press the number"
+Text 26,59,"that corresponds"
+Text 34,59,"with the stat"
+Text 42,59,"to add 1 point.
+Text 50,59,"14 Max."
+Text 58,70,"Shift to finish"
+Text 18,50,List 20[1]
+Text 26,50,List 20[2]
+Text 34,50,List 20[3]
+Text 42,50,List 20[4]
+Text 50,50,List 20[5]
+Text 58,50,List 20[6
 
-18 -> List 20[7]
-1 -> I
-TEXT 1,20,"< Character Creation >"
-TEXT 8,3,"Stats"
-TEXT 18,1,">"
-TEXT 18,8,"Hitpoints:"
+'WAIT FOR SHIFT
+While Getkey!=78
+If Getkey=28
+Then 
+Text List 20[7],1," "
+List 20[7]-8->List 20[7]
+If List 20[7]<18
+Then 
+18->List 20[7]
+IfEnd
+Text List 20[7],1,">"
+IfEnd
+If Getkey=37
+Then 
+Text List 20[7],1," "
+List 20[7]+8->List 20[7]
+If List 20[7]>58
+Then 
+58->List 20[7]
+IfEnd
+Text List 20[7],1,">"
+IfEnd
+'ADDING & SUBTRCTING
+'AP LIMIT=16
+If Getkey=42
+Then 
+If I!=15
+Then 
+(List 20[7]-10)/8->C
+List 20[C]+1->List 20[C]
+0->T
+While T<100
+Isz T
+WhileEnd
+Text List 20[7],50,List 20[C]
+Isz I
+IfEnd
+IfEnd
+If Getkey=32
+Then 
+(List 20[7]-10)/8->C
+If List 20[C]>0
+Then 
+List 20[C]-1->List 20[C]
+0->T
+While T<100
+Isz T
+WhileEnd
+Text List 20[7],50,List 20[C]
+Dsz I
+IfEnd
+IfEnd
+WhileEnd
+ClrGraph
+'TUTORIAL
+Text 1,3,"Climbing floors and defeating"
+Text 8,3,"enemies is key to levelling up"
+Text 15,3,"and progressing."
+Text 22,3,"Loot chests to obtain new"
+Text 29,3,"weapons, and level up to learn"
+Text 36,3,"new skills."
+'WAIT FOR SHIFT
+While Getkey!=78
+WhileEnd
 
-'sam was queer
+Locate 1,1,"Press shift to open"
+Locate 1,2,"chests. They look"
+Locate 1,3,"like this #E691 #E6A9"
+Locate 1,5,"Walk onto stairs to"
+Locate 1,6,"climb a floor. They"
+Locate 1,7,"look like this #E691 #E6B2"
+'WAIT FOR SHIFT
+While Getkey!=78
+WhileEnd
+0->T
+While T<200
+Isz T
+WhileEnd
+0->T
+ClrText
+ClrGraph
+Locate 3,1,"Let the adventure"
+Locate 8,2,"begin·!·"
+ClrText
+ClrGraph
+'WAITS UNTIL 255
+'FLOORS ARE DONE
+While List 19[1]<255
+'LIST 19[1]=FLOOR NO
+'DUNGEON DRAWING
+ClrText
+ClrGraph
+Locate 9,3,"Floor"
+Locate 11,4,List 19[1]
+0->T
+While T<200
+Isz T
+WhileEnd
+0->T
+ClrText
+ClrGraph
+'DUNGEON GEN STARTS
+'HERE
+0->T
+{7,21}->Dim Mat A
+'CREATES UNDER LAYER
+1->I
+1->C
+While C<=7
+While I<=21
+1->Mat A[C,I]
+Isz I
+WhileEnd
+1->I
+Isz C
+WhileEnd
+
+'CREATES ROOMS
+'USES LIST 19
+'S=SIZE VAR
+'O=SIZE CALCULATED
+'M=DATA BUFFER
+'R=ROOM FREQUENCY
+'F=CHEST FREQ
+16->R
+1->O
+While R>1
+Isz O
+4->S
+RanInt#(2,S)->S
+RanInt#(2,20-S)->I
+RanInt#(2,6)->C
+S->M
+2->Mat A[C,I+M]
+While O>1
+While M>1
+0->Mat A[C,I+M]
+Dsz M
+WhileEnd
+S->M
+Dsz O
+WhileEnd
+Dsz R
+WhileEnd
+
+'PLACES CHESTS
+5->F
+1->C
+1->I
+RanInt#(1,F)->F
+While F>1
+While Mat A[C,I]!=0
+RanInt#(2,20)->I
+RanInt#(2,6)->C
+WhileEnd
+If Mat A[C,I]=0
+Then 
+2->Mat A[C,I]
+IfEnd
+Dsz F
+WhileEnd
+
+'ADDS STAIRS
+1->I
+1->C
+While Mat A[C,I]=1 Or Mat A[C,I]=2
+RanInt#(2,20)->I
+RanInt#(2,6)->C
+WhileEnd
+If Mat A[C,I]!=1 Or Mat A[C,I]!=2
+Then 
+3->Mat A[C,I]
+
+'NOTE: RADIUS is the r symbol for radius on the calculator
+C->RADIUS
+
+'NOTE: THETA is the theta symbol in the calculator
+I->THETA
+IfEnd
+
+'TUNNELLING?
+'C=RADIUS
+'I=THETA
+'T=WALK DIST
+'R=RND NO
+'B=BOOLEAN
+59->T
+RADIUS->C
+THETA->I
+While T>1
+RanInt#(1,4)->R
+0->B
+If R=1
+Then 
+Isz C
+C>6×6->C
+1->B
+If Mat A[C,I]=2 Or Mat A[C,I]=1
+Then 
+Dsz C
+0->B
+IfEnd
+IfEnd
+If R=2
+Then 
+Dsz C
+C<2×2->C
+1->B
+If Mat A[C,I]=2 Or Mat A[C,I]=1
+Then 
+Isz C
+0->B
+IfEnd
+IfEnd
+If R=3
+Then 
+Isz I
+I>20×20->I
+1->B
+If Mat A[C,I]=2 Or Mat A[C,I]=1
+Then 
+Dsz I
+0->B
+IfEnd
+IfEnd
+If R=4
+Then 
+Dsz I
+I<2×2->I
+1->B
+If Mat A[C,I]=2 Or Mat A[C,I]=1
+Then 
+Isz I
+0->B
+IfEnd
+IfEnd
+If B=0
+Then 
+R=1×Isz C
+R=2×Dsz C
+R=3×Isz I
+R=4×Dsz I
+If Mat A[C,I]!=2 Or Mat A[C,I]!=3
+Then 
+0->Mat A[C,I]
+IfEnd
+IfEnd
+Dsz T
+WhileEnd
+C->Y
+I->X
+
+'DRAWS MAP
+1->I
+1->C
+While C<=7
+While I<=21
+If Mat A[C,I]=1
+Then 
+Locate I,C,"#E6A6"
+IfEnd
+If Mat A[C,I]=2
+Then 
+Locate I,C,"#E6A9"
+IfEnd
+If Mat A[C,I]=3
+Then 
+Locate I,C,"#E6B2"
+IfEnd
+Isz I
+WhileEnd
+1->I
+Isz C
+WhileEnd
+
+'ACTIONS WITHIN
+'DUNGEON
+
+'MOVEMENT
+'D=DIRECTION
+1->D
+While Mat A[Y,X]!=3
+Locate 21,1,A
+Mat A[Y,X]=2×0->Mat A[Y,X]
+D=1×Locate 1,1,"#E692"
+D=2×Locate 1,1,"#E693"
+D=3×Locate 1,1,"#E690"
+D=4×Locate 1,1,"#E691"
+Locate X,Y,"o"
+If Getkey=31
+Then 
+If List 14[1]=1 And D=2 And Mat A[Y+1,X]=1 Or List 14[1]=1 And D=1 And Mat A[Y-1,X]=1 Or List 14[1]=1 And D=4 And Mat A[Y,X+1]=1 Or List 14[1]=1 And D=3 And Mat A[Y,X-1]=1
+Then 
+If A>1
+Then 
+Dsz A
+If D=1
+Then 
+0->Mat A[Y-1,X]
+Locate X,Y-1," "
+IfEnd
+If D=2
+Then 
+0->Mat A[Y+1,X]
+Locate X,Y+1," "
+IfEnd
+If D=3
+Then 
+0->Mat A[Y,X-1]
+Locate X-1,Y," "
+IfEnd
+If D=4
+Then 
+0->Mat A[Y,X+1]
+Locate X+1,Y," "
+IfEnd
+Else 
+Text 20,30,"Not enough agility·!·"
+1->T
+While T<275
+Isz T
+WhileEnd
+1->T
+IfEnd
+IfEnd
+
+If List 14[1]=0 And D=2 And Mat A[Y+1,X]=1 Or List 14[1]=0 And D=1 And Mat A[Y-1,X]=1 Or List 14[1]=0 And D=4 And Mat A[Y,X+1]=1 Or List 14[1]=0 And D=3 And Mat A[Y,X-1]=1
+Then 
+Text 30,15,"You cant talk to walls..."
+0->T
+While T<275
+Isz T
+WhileEnd
+IfEnd
+IfEnd
+If Getkey=27
+Then 
+Isz X
+4->D
+If Mat A[Y,X]=1
+Then 
+Dsz X
+Else 
+Locate X-1,Y," "
+IfEnd
+IfEnd
+If Getkey=38
+Then 
+Dsz X
+3->D
+If Mat A[Y,X]=1
+Then 
+Isz X
+Else 
+Locate X+1,Y," "
+IfEnd
+IfEnd
+If Getkey=28
+Then 
+Dsz Y
+1->D
+If Mat A[Y,X]=1
+Then 
+Isz Y
+Else 
+Locate X,Y+1," "
+IfEnd
+IfEnd
+If Getkey=37
+Then 
+Isz Y
+2->D
+If Mat A[Y,X]=1
+Then 
+Dsz Y
+Else 
+Locate X,Y-1," "
+IfEnd
+IfEnd
+X>21×21->X
+Y>7×7->Y
+X<1×1->X
+Y<1×1->Y
+
+ClrGraph
+'B=ITEM ID
+'R=RND NO.
+'I=ITEM FOUD
+'1=ITEM
+'2=ARMOUR
+'3=WEAPON
+
+'DETECTION
+If Mat A[Y,X]=2
+Then 
+
+'UPTO F 15
+If List 19[1]<15
+Then 
+'DROP TABLES
+RanInt#(1,100)->R
+R>30×1->I
+R>50×2->I
+R>60×3->I
+'ITEMS
+If I=1
+Then 
+43->B
+IfEnd
+'ARMOUR
+If I=2
+Then 
+RanInt#(26,29)->B
+IfEnd
+'WEAPONS
+If I=3
+Then 
+RanInt#(1,3)->B
+IfEnd
+IfEnd
+
+'F 16-45
+If List 19[1]>16 And List 19[1]<46
+Then 
+'DROP TABLES
+RanInt#(1,100)->R
+R>1×1->I
+R>50×2->I
+R>60×3->I
+'ITEMS
+If I=1
+Then 
+RanInt#(43,44)->B
+IfEnd
+'ARMOUR
+If I=2
+Then 
+RanInt#(26,32)->B
+IfEnd
+'WEAPONS
+If I=3
+Then 
+RanInt#(1,11)->B
+IfEnd
+IfEnd
+
+'F 46-72
+If List 19[1]>46 And List 19[1]<73
+Then 
+'DROP TABLES
+RanInt#(1,100)->R
+R>1×1->I
+R>80×2->I
+R>90×3->I
+'ITEMS
+If I=1
+Then 
+RanInt#(43,44)->B
+IfEnd
+'ARMOUR
+If I=2
+Then 
+RanInt#(26,37)->B
+IfEnd
+'WEAPONS
+If I=3
+Then 
+RanInt#(1,19)->B
+IfEnd
+IfEnd
+
+'F >73
+If List 19[1]>73
+Then 
+'DROP TABLES
+RanInt#(1,100)->R
+R>1×1->I
+R>80×2->I
+R>90×3->I
+'ITEMS
+If I=1
+Then 
+RanInt#(43,44)->B
+IfEnd
+'ARMOUR
+If I=2
+Then 
+RanInt#(26,42)->B
+IfEnd
+'WEAPONS
+If I=3
+Then 
+RanInt#(1,25)->B
+IfEnd
+IfEnd
+
+1->T
+If B=44
+Then 
+List 16[2]+1->List 16[2]
+IfEnd
+If B=43
+Then 
+List 16[1]+1->List 16[1]
+Else 
+While List 15[T]>0
+Isz T
+If List 15[T]=B
+Then 
+B->List 15[T]
+IfEnd
+WhileEnd
+B->List 15[T]
+IfEnd
+
+Text 30,1,"You found a"
+B=1×Text 30,50,"steel sword·!·"
+B=2×Text 30,50,"rusty mace·!·"
+B=3×Text 30,50,"broad sword·!·"
+B=4×Text 30,50,"cleaver·!·"
+B=5×Text 30,50,"mithril dagger·!·"
+B=6×Text 30,50,"wooden staff·!·"
+B=7×Text 30,50,"vile whip·!·"
+B=8×Text 30,50,"holy lance·!·"
+B=9×Text 30,50,"heavy warhamer·!·"
+B=10×Text 30,50,"snakewood xbow·!·"
+B=11×Text 30,50,"magic staff·!·"
+B=12×Text 30,50,"shining spear·!·"
+B=13×Text 30,50,"anger mace·!·"
+B=14×Text 30,50,"throwing dagger·!·"
+B=15×Text 30,50,"runic blade·!·"
+B=16×Text 30,50,"blessed broadsword·!·"
+B=17×Text 30,50,"bladed whip·!·"
+B=18×Text 30,50,"throwing hammers·!·"
+B=19×Text 30,50,"greater staff·!·"
+B=20×Text 30,50,"greatsword·!·"
+B=21×Text 30,50,"paladin sword·!·"
+B=22×Text 30,50,"crystal bow·!·"
+B=23×Text 30,50,"kunai·!·"
+B=24×Text 30,50,"godlike warhammer·!·"
+B=25×Text 30,50,"rusty helmet·!·"
+B=26×Text 30,50,"dusty platebody·!·"
+B=27×Text 30,50,"tunnelling helmet·!·"
+B=28×Text 30,50,"pair of mith legs·!·"
+B=29×Text 30,50,"mithril platebody·!·"
+B=30×Text 30,50,"mithril helmet·!·"
+B=31×Text 30,50,"pair of rune legs·!·"
+B=32×Text 30,50,"rune platebody·!·"
+B=33×Text 30,50,"rune helmet·!·"
+B=34×Text 30,50,"pair of mystic legs·!·"
+B=35×Text 30,50,"mystic platebody·!·"
+B=36×Text 30,50,"mystic helmet·!·"
+B=37×Text 30,50,"grealer platebody·!·"
+B=38×Text 30,50,"pair of greater legs·!·"
+B=39×Text 30,50,"weightless platebody·!·"
+B=40×Text 30,50,"holy helmet·!·"
+B=41×Text 30,50,"ancient platebody·!·"
+B=42×Text 30,50,"pair of ancient legs·!·"
+B=43×Text 30,50,"health potion·!·"
+B=44×Text 30,50,"mana potion·!·"
+0->T
+While T<475
+Isz T
+WhileEnd
+IfEnd
+If List 19[1]>4 And List 14[1]=0
+Then 
+1->List 14[1]
+Text 1,1,"You found aring of wallbreaking·!·"
+Text 9,1,"Press Exe when facing a wall."
+Text 18,1,"Make sure you have enough"
+Text 27,1,"agility·!·"
+Text 36,1,"It is seen in the top"
+Text 45,1,"right corner"
+0->T
+While T<2000
+Isz T
+WhileEnd
+IfEnd
+WhileEnd
+List 19[1]+1->List 19[1]
+'255 FLOOR CHECK
+WhileEnd
