@@ -1,0 +1,21 @@
+Chests
+#E6A9
+
+Stairs
+#E6B2
+
+Arrow pointing right
+#E691
+
+Arrow pointing up
+#E692
+
+Arrow pointing down
+#E693
+
+Arrow pointing left
+#E690
+
+Solid Wall
+#E6A6
+
